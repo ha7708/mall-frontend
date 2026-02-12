@@ -3,7 +3,9 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
+import { useState } from "react";
 
+// getNum : 문자열 -> 숫자 변환 & 숫자 검증 단계
 const getNum = (param, defaultValue) => {
   if (!param) {
     return defaultValue;
@@ -14,17 +16,22 @@ const getNum = (param, defaultValue) => {
 // 커스텀 훅 정의
 // 커스텀 훅 이름은 반드시 'use...' 로 시작해야한다.
 // 연관: src/components/todo/ReadComponent.js
+// 연관: src/components/todo/ListComponent.js
 const useCustomMove = () => {
   const navigate = useNavigate();
+
+  // 동일 페이지 클릭(새로고침 등) 시에도 서버를 호출하도록 하기 위해 상태변수 사용
+  const [refresh, setRefresh] = useState(false); // true/false 토글
+
   // 파라미터 추출후 쿼리스트링으로 만듦
   const [queryParams] = useSearchParams();
-  // getNum : 문자열 -> 숫자 변환 & 숫자 검증 단계
   const page = getNum(queryParams.get("page"), 1);
   const size = getNum(queryParams.get("size"), 10);
+
   // createSearchParams() 결과는 객체, 그러나 navigate는 문자열 필요하므로 .toString()
   const queryDefault = createSearchParams({ page, size }).toString(); // 새로 추가
 
-  //
+  // moveToList
   const moveToList = (pageParam) => {
     let queryStr = "";
     // 새 페이지로 이동할 때 onClick={() => moveToList({ page: 1, size: 10 })}
@@ -40,9 +47,10 @@ const useCustomMove = () => {
       queryStr = queryDefault;
     }
     navigate({ pathname: `../list`, search: queryStr });
+    setRefresh(!refresh);
   };
 
-  //
+  // moveToModify
   const moveToModify = (num) => {
     console.log(queryDefault);
     navigate({
@@ -51,7 +59,15 @@ const useCustomMove = () => {
     });
   };
 
-  return { moveToList, moveToModify, page, size };
+  // moveToRead
+  const moveToRead = (num) => {
+    console.log(queryDefault);
+    navigate({
+      pathname: `../read/${num}`,
+      search: queryDefault,
+    });
+  };
+  return { moveToList, moveToModify, moveToRead, page, size, refresh };
 };
 
 export default useCustomMove;

@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import ListComponent from "../../components/todo/ListComponent";
 
 const ListPage = () => {
   // useSearchParams : 쿼리스트링 값 추출 가능. /todo/list?page=3&size=20
@@ -8,9 +9,8 @@ const ListPage = () => {
   const size = queryParams.get("size") ? parseInt(queryParams.get("size")) : 10;
   return (
     <div className="p-4 w-full bg-white">
-      <div className="text-3xl font-extrabold">
-        Todo List Page Component {page} --- {size}
-      </div>
+      <div className="text-3xl font-extrabold">Todo List Page Component</div>
+      <ListComponent />
     </div>
   );
 };
