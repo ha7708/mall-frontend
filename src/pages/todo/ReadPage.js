@@ -5,6 +5,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { useCallback } from "react";
+import ReadComponent from "../../components/todo/ReadComponent";
 
 // 조회할 때 사용하는 ReadPage 컴포넌트
 const ReadPage = () => {
@@ -21,7 +22,7 @@ const ReadPage = () => {
   // 3. 추출한 변수와 createSearchParams() 함수로 navigate 이동 시 필요한 쿼리스트링 만듬
   const queryStr = createSearchParams({ page, size }).toString();
 
-  // tno 값으로 특정 페이지 이동
+  // 수정 : tno 값으로 특정 페이지 이동
   const moveToModify = useCallback(
     (tno) => {
       navigate({
@@ -32,16 +33,23 @@ const ReadPage = () => {
     },
     [tno, page, size]
   );
+
+  // 조회
   const moveToList = useCallback(() => {
     navigate({ pathname: `/todo/list`, search: queryStr });
-  });
+  }, [page, size]);
+
   return (
-    <div className="text-3xl font-extrabold">
-      Todo Read Page Component {tno}
-      <div>
-        <button onClick={() => moveToModify(33)}>Test Modify</button>
-        <button onClick={() => moveToList()}>Test List</button>
-      </div>
+    // <div className="text-3xl font-extrabold">
+    //   Todo Read Page Component {tno}
+    //   <div>
+    //     <button onClick={() => moveToModify(33)}>Test Modify</button>
+    //     <button onClick={() => moveToList()}>Test List</button>
+    //   </div>
+    // </div>
+    <div className="font-extrabold w-full bg-white mt-6">
+      <div className="text-2xl ">Todo Read Page Component {tno}</div>
+      <ReadComponent tno={tno} />
     </div>
   );
 };
